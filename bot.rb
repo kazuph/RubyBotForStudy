@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 # encoding: utf-8
+# $ gem install twitter
 require "twitter"
 
 # 設定読み込み./config
@@ -27,3 +28,13 @@ begin
 rescue => error
     puts "ERORR " + error.message
 end
+
+# cronの設定
+# */30 *  *  *  * USER_NAME bash -lc '/home/USER_NAME/cron/bot.rb'
+# .bash_profile
+# if [ -s ${HOME}/.rbenv ]; then
+#         export PATH="$HOME/.rbenv/bin:$PATH"
+#         eval "$(rbenv init -)"
+#         source ~/.rbenv/completions/rbenv.bash
+# fi
+

@@ -8,10 +8,10 @@ use DateTime::Format::Strptime;
 
 my $handle = Net::Twitter->new({
     traits => [qw/OAuth API::REST API::Search/],
-    consumer_key => "lnnjDg4UrOYQpL2iq56Q",
-    consumer_secret => "EJnJxZGozCFp6Iwui8pJyhPg7gCyeQbHUxzWZMdvR4",
-    access_token => "130326102-GBuxOMcO54I3dmvg0PnIuEL6bhny3rbovb8Hyrsb",
-    access_token_secret => "cqJhMIQmwN0OMUel4u8sgz7WVVFMwlZTQuiRmdnSa1w"
+    consumer_key => "",
+    consumer_secret => "",
+    access_token => "",
+    access_token_secret => ""
 });
 
 my $ret = $handle->update({status=>"ぺろぺろ"});

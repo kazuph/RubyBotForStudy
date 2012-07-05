@@ -8,5 +8,5 @@ Twitter.configure do |config|
   config.oauth_token_secret = 'cqJhMIQmwN0OMUel4u8sgz7WVVFMwlZTQuiRmdnSa1w'
 end
 # Twitter.update(open('twitter.txt').readlines.shuffle.first)
-Twitter.update("こんにちわこんにちわ !")
+Twitter.update(ARGV[0])
 # p Twitter.home_timeline

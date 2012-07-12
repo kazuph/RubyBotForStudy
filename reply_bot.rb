@@ -5,11 +5,28 @@ require "twitter"
 require "timeout"
 require "./config.rb"
 require "pp"
+require "sqlite3"
 
-# 設定読み込み./config
-# twitter_config = Hash.new
-# file = File.open("config")
-# twitter_config = (eval File.read(file))
+include SQLite3
+# DBの作成
+db = Database.new("bot.db")
+
+# テーブル作成
+sql = <<SQL
+CREATE TABLE IF NOT EXISTS tw_reply (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  tw_id TEXT
+)
+SQL
+db.execute(sql)
+
+# INDEX貼っとく
+sql = <<SQL
+CREATE INDEX IF NOT EXISTS idx_tw_id ON tw_reply(tw_id)
+SQL
+db.execute(sql)
+
+db.close
 
 # keyセット
 user = $twitter_config[:user]
@@ -39,10 +56,31 @@ begin
   my_tweets.each do |tweet|
     # とりあえずコードって呟いてたらリプル
     if /コード/ =~ tweet.text
-      print tweet.text, "\n"
+      p tweet.text
+      # そのTweetがあるかどうかを探す
+      puts "select"
+      db = Database.new("bot.db")
+      sql = "select id from tw_reply where tw_id = ?"
+      if !db.execute(sql, tweet.id.to_s).count.zero?
+        puts "already reply"
+        db.close
+        next
+      end
+
+      # Tweetを保存する
+      puts "save"
+      sql = "INSERT INTO tw_reply (tw_id) values(:tw_id)"
+      if !db.execute(sql, {:tw_id => tweet.id.to_s})
+        db.close
+        break
+      end
+
+      # リプを送る
+      puts "reply"
       timeout(10) do
         word = words[(rand * words.length).to_i] + words[(rand * words.length).to_i]
         Twitter.update("@" + user + word + " " + tweet.id.to_s)
+        break
       end
     end
   end
@@ -60,6 +98,8 @@ rescue => error
     sleep 1
     retry
   end
+ensure
+  db.close
 end
 
 # cronの設定

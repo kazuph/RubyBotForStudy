@@ -80,7 +80,7 @@ begin
       timeout(10) do
         word = words[(rand * words.length).to_i] + words[(rand * words.length).to_i]
         Twitter.update("@" + user + word + " " + tweet.id.to_s)
-        break
+        exit
       end
     end
   end
